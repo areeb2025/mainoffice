@@ -1,10 +1,9 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, jsonify
 import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
-from urllib.parse import quote
 
 app = Flask(__name__)
 
@@ -63,6 +62,7 @@ Brand: {brand}
     except Exception as e:
         mailer_error = str(e)
 
+    from urllib.parse import quote
     redirect_url = (
         f"/loading.html?"
         f"brand={quote(brand)}&"
@@ -73,4 +73,4 @@ Brand: {brand}
         f"error={quote(mailer_error)}"
     )
 
-    return redirect(redirect_url, code=302)
+    return jsonify({"success": mail_sent, "redirect": redirect_url, "error": mailer_error})
