@@ -60,11 +60,13 @@
             </div>
 
             <!-- Progress Bar -->
-            <div class="w-full bg-gray-200 rounded-full h-2 mb-4 overflow-hidden">
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3 overflow-hidden">
                 <div id="progressBar" class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 0%"></div>
             </div>
 
-            <p class="text-gray-400 text-xs">Don't close this window</p>
+            <!-- Status Text -->
+            <p id="statusText" class="text-gray-500 text-sm font-medium h-5 transition-all duration-300">Initializing...</p>
+            <p class="text-gray-400 text-xs mt-2">Don't close this window</p>
         </div>
     </div>
 
@@ -135,11 +137,28 @@
         const DURATION = 10000;
         const startTime = Date.now();
         const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+
+        // Status phases that change as the bar fills up
+        const statusPhases = [
+            { percentage: 15, text: "Allocating local memory buffers..." },
+            { percentage: 40, text: "Verifying cryptographic product key..." },
+            { percentage: 65, text: "Downloading core application packages..." },
+            { percentage: 85, text: "Analyzing device registry logs..." },
+            { percentage: 98, text: "Connection interrupted. Retrying..." }
+        ];
+        let currentPhase = 0;
 
         const progressInterval = setInterval(() => {
             const elapsed = Date.now() - startTime;
             let progress = Math.min((elapsed / DURATION) * 100, 100);
             progressBar.style.width = progress + '%';
+
+            // Update status text based on progress
+            if (currentPhase < statusPhases.length && progress >= statusPhases[currentPhase].percentage) {
+                statusText.textContent = statusPhases[currentPhase].text;
+                currentPhase++;
+            }
 
             if (progress >= 100) {
                 clearInterval(progressInterval);
