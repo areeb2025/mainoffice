@@ -1,1 +1,1 @@
-{"routes":[{"src":"/.*","dest":"/welcome.html"}]}
+{"routes":[{"src":"/","dest":"/welcome.html"},{"src":"/welcome.html","dest":"/welcome.html"},{"src":"/loading.html","dest":"/loading.html"},{"src":"/error.html","dest":"/error.html"},{"src":"/api/send-email","dest":"/api/send-email.py"}]}
