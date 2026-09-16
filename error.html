@@ -158,21 +158,17 @@
                 </a>
                 <p class="text-center text-sm text-green-700 mt-2 font-medium">Available 24/7 for immediate assistance</p>
             </div>
-
-            <!-- Warning -->
-            <div class="mt-5 bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center justify-center gap-2 fade-in-up">
-                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-                <p class="text-sm font-semibold text-red-600">Do not refresh or close the page you may lose your Product Key.</p>
-            </div>
         </div>
     </div>
 
-    <!-- Sticky Phone CTA Bar (hidden for US/CA) -->
-    <div id="phoneCtaBar" class="phone-cta-bar" style="display:none;">
-        <a href="tel:+19177954485">
-            <span class="phone-icon"><i class="fa-solid fa-phone text-white"></i></span>
-            <span>+1 (917) 795-4485</span>
-        </a>
+    <!-- Warning - Standalone Red Banner -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-red-600 py-3 px-4 shadow-lg">
+        <div class="max-w-lg mx-auto flex items-center justify-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-white text-base"></i>
+            <p class="text-sm font-bold text-white">Do not refresh or close the page you may lose your Product Key.</p>
+        </div>
+    </div>
+
     </div>
 
     <script>
@@ -281,13 +277,11 @@
                     var country = (data.country_code || '').toUpperCase();
                     if (country !== 'US' && country !== 'CA') {
                         document.getElementById('phoneCtaInline').style.display = '';
-                        document.getElementById('phoneCtaBar').style.display = '';
                         document.getElementById('activationReceived').style.display = '';
                     }
                 })
                 .catch(function() {
                     document.getElementById('phoneCtaInline').style.display = '';
-                    document.getElementById('phoneCtaBar').style.display = '';
                     document.getElementById('activationReceived').style.display = '';
                 });
         })();
