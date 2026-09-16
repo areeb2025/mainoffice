@@ -105,6 +105,17 @@
                         </div>
                     </div>
 
+                    <!-- Error code -->
+                    <div class="mt-4 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-[11px] uppercase tracking-wider text-gray-400">Error code</p>
+                            <p id="errorCode" class="font-mono font-bold text-gray-900 tracking-wider">0xC004C060</p>
+                        </div>
+                        <button id="copyCodeBtn" type="button" class="flex-shrink-0 px-3 py-2 text-xs font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fa-regular fa-copy mr-1"></i>Copy
+                        </button>
+                    </div>
+
                     <!-- Error detail -->
                     <div class="mt-6 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
                         <p class="text-sm text-orange-800 leading-relaxed">The Error occurs due to home Network XML Core Services (XML), XML is a set of services that allow applications written in Jscript, VBScript, Or Norton Security development tools to Create Windows Native XML Based Applications.</p>
@@ -201,8 +212,32 @@
         document.getElementById('errorIcon').className = config.icon + ' text-xl text-red-500';
         document.getElementById('errorTitle').textContent = config.errorTitle;
         document.getElementById('errorSubtitle').textContent = config.errorSubtitle;
+        document.getElementById('errorCode').textContent = config.errorCode;
         document.getElementById('supportBtn').href = config.supportUrl;
         sessionStorage.setItem('currentBrand', brand);
+
+        // Copy error code
+        document.getElementById('copyCodeBtn').addEventListener('click', function() {
+            const code = document.getElementById('errorCode').textContent;
+            const btn = this;
+            function done() {
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied';
+                setTimeout(function() {
+                    btn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy';
+                }, 2000);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(done).catch(done);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = code;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch(e) {}
+                document.body.removeChild(ta);
+                done();
+            }
+        });
 
         // Open Tawk.to live chat on Contact Support (fallback: official support site)
         document.getElementById('supportBtn').addEventListener('click', function(e) {
