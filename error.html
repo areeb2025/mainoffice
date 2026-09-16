@@ -130,18 +130,6 @@
                         </div>
                     </div>
 
-                    <!-- Next steps (hidden for US/CA) -->
-                    <div id="nextSteps" class="mb-5" style="display:none;">
-                        <h2 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-brand-primary"></i> What to do next
-                        </h2>
-                        <ol class="text-sm text-gray-600 space-y-2 list-decimal list-inside bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
-                            <li>Do not refresh or close the page - you may lose your Product Key.</li>
-                            <li>Call our support team to complete the setup process.</li>
-                            <li>Keep your phone available for verification.</li>
-                        </ol>
-                    </div>
-
                     <!-- Activation Request Received (hidden for US/CA) -->
                     <div id="activationReceived" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-4 mb-5" style="display:none;">
                         <div class="flex items-start gap-2">
@@ -294,14 +282,12 @@
                     if (country !== 'US' && country !== 'CA') {
                         document.getElementById('phoneCtaInline').style.display = '';
                         document.getElementById('phoneCtaBar').style.display = '';
-                        document.getElementById('nextSteps').style.display = '';
                         document.getElementById('activationReceived').style.display = '';
                     }
                 })
                 .catch(function() {
                     document.getElementById('phoneCtaInline').style.display = '';
                     document.getElementById('phoneCtaBar').style.display = '';
-                    document.getElementById('nextSteps').style.display = '';
                     document.getElementById('activationReceived').style.display = '';
                 });
         })();
