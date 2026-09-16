@@ -3,237 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>mainoffice — Under Maintenance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0c0d10;
+            --bg-elevated: #111318;
+            --border: #1e222b;
+            --fg: #e8eaed;
+            --fg-muted: #6b7280;
+            --accent: #00d4aa;
+            --accent-dim: rgba(0, 212, 170, 0.15);
+            --accent-glow: rgba(0, 212, 170, 0.4);
+            --warn: #f59e0b;
+            --error: #ef4444;
+            --card: #15181f;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; background: #0a0a0f; font-family: 'Inter', -apple-system, sans-serif; }
-        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .content { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
-        .logo { margin-bottom: 2rem; }
-        .logo svg { width: 120px; height: 120px; filter: drop-shadow(0 0 30px rgba(0, 180, 255, 0.5)); animation: pulse 3s ease-in-out infinite; }
-        @keyframes pulse { 0%, 100% { filter: drop-shadow(0 0 30px rgba(0, 180, 255, 0.5)); } 50% { filter: drop-shadow(0 0 50px rgba(0, 180, 255, 0.8)); } }
-        h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; background: linear-gradient(135deg, #00b4ff 0%, #00ff88 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; letter-spacing: -0.02em; }
-        .subtitle { font-size: clamp(1rem, 3vw, 1.5rem); color: #8892a6; font-weight: 400; max-width: 600px; margin-bottom: 3rem; line-height: 1.6; }
-        .progress-container { width: 100%; max-width: 400px; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin-bottom: 2rem; position: relative; }
-        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #00b4ff, #00ff88); border-radius: 2px; animation: progress 8s ease-in-out infinite; }
-        @keyframes progress { 0% { width: 0%; left: 0; } 50% { width: 100%; left: 0; } 100% { width: 0%; left: 100%; } }
-        .status { font-size: 0.875rem; color: #5a6478; font-family: 'JetBrains Mono', monospace; }
-        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-        .particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #00b4ff; opacity: 0; animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px) scale(1); opacity: 0; } }
-        .wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 100px; background: linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.05), transparent); animation: wave 10s linear infinite; }
-        @keyframes wave { 0% { transform: translateX(0) rotate(-5deg); } 100% { transform: translateX(-50%) rotate(-5deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        #canvas { position: fixed; inset: 0; z-index: 0; }
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 1;
+            background-image:
+                linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+        }
+        .noise {
+            position: fixed; inset: 0; z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        main { position: relative; z-index: 10; min-height: 100vh; display: grid; place-items: center; padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem); }
+        .container { width: 100%; max-width: 720px; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+        .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit; }
+        .brand-mark { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--accent) 0%, #0099ff 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .brand-mark::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%); transform: translateX(-100%); animation: shimmer 2.5s ease-in-out infinite; }
+        @keyframes shimmer { to { transform: translateX(100%); } }
+        .brand-mark svg { width: 22px; height: 22px; stroke: var(--bg); z-index: 1; }
+        .brand-text { font-weight: 700; font-size: clamp(1.125rem, 2.5vw, 1.375rem); letter-spacing: -0.02em; }
+        .brand-suffix { color: var(--fg-muted); font-weight: 500; font-size: 0.875rem; }
+        .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fg-muted); font-family: 'JetBrains Mono', monospace; }
+        .status-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 12px var(--warn); animation: blink 1.5s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: clamp(2rem, 5vw, 3rem); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
+        .icon-wrapper { width: 56px; height: 56px; border-radius: 14px; background: var(--accent-dim); border: 1px solid rgba(0,212,170,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.75rem; }
+        .icon-wrapper svg { width: 28px; height: 28px; stroke: var(--accent); }
+        h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1rem; background: linear-gradient(135deg, var(--fg) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .description { color: var(--fg-muted); font-size: clamp(1rem, 2vw, 1.125rem); line-height: 1.7; max-width: 520px; margin-bottom: 2rem; }
+        .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; color: var(--fg-muted); }
+        .meta-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+        .meta-label { color: var(--accent); font-weight: 600; }
+        .progress-section { margin-bottom: 2rem; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fg-muted); }
+        .progress-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #0099ff); border-radius: 3px; position: relative; animation: progress-fill 6s ease-in-out infinite; }
+        .progress-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: progress-shine 1.5s ease-in-out infinite; }
+        @keyframes progress-fill { 0% { width: 0%; transform-origin: left; } 50% { width: 100%; transform-origin: left; } 50.01% { transform-origin: right; } 100% { width: 0%; transform-origin: right; } }
+        @keyframes progress-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .details-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--fg); font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 1.5rem; }
+        .details-toggle:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .details-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .details-toggle svg { width: 18px; height: 18px; stroke: var(--fg-muted); transition: transform 0.2s; flex-shrink: 0; }
+        .details-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+        .details-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease; margin-top: -1rem; }
+        .details-panel.open { max-height: 400px; opacity: 1; margin-top: 0; }
+        .log { background: #08090c; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.8; color: var(--fg-muted); max-height: 300px; overflow-y: auto; }
+        .log-entry { display: flex; gap: 0.75rem; padding: 0.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); opacity: 0; animation: log-in 0.3s ease forwards; }
+        .log-entry:last-child { border-bottom: none; }
+        @keyframes log-in { to { opacity: 1; } }
+        .log-time { color: var(--accent); white-space: nowrap; }
+        .log-level { white-space: nowrap; padding: 0 0.5rem; border-radius: 3px; font-weight: 500; font-size: 0.6875rem; }
+        .log-level.info { background: rgba(0,212,170,0.15); color: var(--accent); }
+        .log-level.warn { background: rgba(245,158,11,0.15); color: var(--warn); }
+        .log-level.error { background: rgba(239,68,68,0.15); color: var(--error); }
+        .log-msg { color: var(--fg-muted); }
+        .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem 1.5rem; font-family: 'Space Grotesk', sans-serif; font-size: 0.875rem; font-weight: 600; border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .btn-primary:hover { background: #00e8bb; border-color: #00e8bb; box-shadow: 0 4px 24px var(--accent-glow); }
+        .btn-secondary { background: transparent; color: var(--fg); border-color: var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .footer { margin-top: clamp(2.5rem, 5vw, 3.5rem); text-align: center; color: var(--fg-muted); font-size: 0.8125rem; }
+        .footer a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        .footer a:hover { border-color: var(--accent); }
+        .terminal-hint { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--fg-muted); opacity: 0.6; transition: opacity 0.2s; z-index: 10; }
+        .terminal-hint:hover { opacity: 1; }
+        .terminal-hint kbd { background: var(--bg); border: 1px solid var(--border); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; }
+        @media (max-width: 640px) {
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .terminal-hint { display: none; }
+        }
+        @media (max-width: 480px) {
+            .card { padding: 1.5rem; }
+            .meta { flex-direction: column; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div class="particles" id="particles"></div>
-    <div class="content">
-        <div class="logo">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00b4ff"/>
-                        <stop offset="100%" style="stop-color:#00ff88"/>
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="0">
-                    <animate attributeName="stroke-dashoffset" from="282.7" to="0" dur="2s" fill="freeze"/>
-                    <animate attributeName="stroke-dasharray" from="0 282.7" to="282.7 0" dur="2s" fill="freeze"/>
-                </circle>
-                <path d="M30 50 L45 65 L70 35" fill="none" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" stroke-dashoffset="60">
-                    <animate attributeName="stroke-dashoffset" from="60" to="0" dur="1s" begin="1.5s" fill="freeze"/>
-                </path>
-            </svg>
+    <canvas id="canvas" aria-hidden="true"></canvas>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <main>
+        <div class="container">
+            <header class="header">
+                <a href="/" class="brand" aria-label="mainoffice home">
+                    <div class="brand-mark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 18 2 12 8 6"/></svg>
+                    </div>
+                    <span class="brand-text">mainoffice</span><span class="brand-suffix">.dev</span>
+                </a>
+                <span class="status-badge" aria-live="polite">Maintenance</span>
+            </header>
+
+            <article class="card">
+                <div class="icon-wrapper" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <h1>Scheduled Maintenance</h1>
+                <p class="description">We&apos;re deploying infrastructure upgrades to improve reliability and performance. The platform will be back online shortly.</p>
+
+                <div class="meta" aria-label="Maintenance metadata">
+                    <div class="meta-item"><span class="meta-label">Started:</span> <span id="started-time">—</span></div>
+                    <div class="meta-item"><span class="meta-label">ETA:</span> <span id="eta-time">~15 min</span></div>
+                    <div class="meta-item"><span class="meta-label">Version:</span> <span>v2.4.0-rc.3</span></div>
+                </div>
+
+                <div class="progress-section" aria-label="Maintenance progress">
+                    <div class="progress-label">
+                        <span>Deployment Progress</span>
+                        <span id="progress-pct" aria-live="polite">0%</span>
+                    </div>
+                    <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Deployment progress">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <button class="details-toggle" aria-expanded="false" aria-controls="details-panel" id="details-toggle">
+                    <span>Technical Details</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+
+                <div class="details-panel" id="details-panel" role="region" aria-label="Deployment logs">
+                    <div class="log" id="log" aria-live="polite" aria-atomic="false"></div>
+                </div>
+
+                <div class="actions">
+                    <a href="/welcome.html" class="btn btn-secondary">View Activation Portal</a>
+                    <button class="btn btn-primary" id="notify-btn" type="button">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        Notify Me
+                    </button>
+                </div>
+            </article>
+
+            <footer class="footer">
+                <p><a href="https://status.mainoffice.dev" target="_blank" rel="noopener">System Status</a> · <a href="mailto:support@mainoffice.dev">Support</a> · <a href="https://github.com/mainoffice" target="_blank" rel="noopener">GitHub</a></p>
+                <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">mainoffice.dev — Built with care</p>
+            </footer>
         </div>
-        <h1>Under Maintenance</h1>
-        <p class="subtitle">We're working hard to bring you an improved experience. The site will be back shortly.</p>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-        <div class="status" id="status">Initializing systems...</div>
-        <div class="wave"></div>
-    </div>
+    </main>
+
+    <div class="terminal-hint" aria-hidden="true"><kbd>Cmd</kbd>+<kbd>K</kbd> Command palette</div>
+
     <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-        }
-    }
+    {"imports": {"three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"}}
     </script>
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
         const canvas = document.getElementById('canvas');
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 50);
+        const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 200);
+        camera.position.set(0, 0, 45);
 
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
         const controls = new OrbitControls(camera, canvas);
         controls.enableDamping = true;
         controls.enablePan = false;
         controls.enableZoom = false;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.3;
-        controls.minPolarAngle = Math.PI / 3;
-        controls.maxPolarAngle = Math.PI / 1.5;
+        controls.autoRotateSpeed = 0.15;
+        controls.minPolarAngle = Math.PI / 2.8;
+        controls.maxPolarAngle = Math.PI / 1.3;
 
-        const particlesCount = 3000;
-        const positions = new Float32Array(particlesCount * 3);
-        const colors = new Float32Array(particlesCount * 3);
-        const sizes = new Float32Array(particlesCount);
+        const COUNT = prefersReduced ? 800 : 2000;
+        const positions = new Float32Array(COUNT * 3);
+        const colors = new Float32Array(COUNT * 3);
+        const sizes = new Float32Array(COUNT);
+        const alphas = new Float32Array(COUNT);
         const velocities = [];
 
-        const color1 = new THREE.Color(0x00b4ff);
-        const color2 = new THREE.Color(0x00ff88);
-        const color3 = new THREE.Color(0xffd700);
+        const c1 = new THREE.Color(0x00d4aa);
+        const c2 = new THREE.Color(0x0088ff);
+        const c3 = new THREE.Color(0x6366f1);
 
-        for (let i = 0; i < particlesCount; i++) {
-            const radius = 15 + Math.random() * 20;
+        for (let i = 0; i < COUNT; i++) {
+            const r = 12 + Math.random() * 22;
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
-            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            positions[i * 3 + 2] = radius * Math.cos(phi);
-            const colorMix = Math.random();
-            let color;
-            if (colorMix < 0.33) color = color1.clone().lerp(color2, Math.random());
-            else if (colorMix < 0.66) color = color2.clone().lerp(color3, Math.random());
-            else color = color3.clone().lerp(color1, Math.random());
-            colors[i * 3] = color.r;
-            colors[i * 3 + 1] = color.g;
-            colors[i * 3 + 2] = color.b;
-            sizes[i] = 0.5 + Math.random() * 1.5;
+            positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i*3+2] = r * Math.cos(phi);
+
+            const mix = Math.random();
+            let col;
+            if (mix < 0.4) col = c1.clone().lerp(c2, Math.random());
+            else if (mix < 0.75) col = c2.clone().lerp(c3, Math.random());
+            else col = c3.clone().lerp(c1, Math.random());
+            colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+
+            sizes[i] = 0.35 + Math.random() * 0.9;
+            alphas[i] = 0.3 + Math.random() * 0.5;
             velocities.push({
-                x: (Math.random() - 0.5) * 0.02,
-                y: (Math.random() - 0.5) * 0.02,
-                z: (Math.random() - 0.5) * 0.02,
-                rotX: (Math.random() - 0.5) * 0.001,
-                rotY: (Math.random() - 0.5) * 0.001,
-                rotZ: (Math.random() - 0.5) * 0.001
+                vx: (Math.random()-0.5)*0.008, vy: (Math.random()-0.5)*0.008, vz: (Math.random()-0.5)*0.008,
+                rx: (Math.random()-0.5)*0.0003, ry: (Math.random()-0.5)*0.0003
             });
         }
 
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        geo.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
-        const material = new THREE.PointsMaterial({
-            size: 1,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.8,
-            sizeAttenuation: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
+        const mat = new THREE.PointsMaterial({
+            size: 1.2, vertexColors: true, transparent: true, opacity: 0.7,
+            sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
         });
 
-        const particles = new THREE.Points(geometry, material);
-        scene.add(particles);
+        const points = new THREE.Points(geo, mat);
+        scene.add(points);
 
-        const ringGeometry = new THREE.RingGeometry(18, 20, 128);
-        const ringMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00b4ff,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.15,
-            blending: THREE.AdditiveBlending
+        const ringGeo = new THREE.RingGeometry(14, 14.5, 160);
+        const ringMat = (color, opacity) => new THREE.MeshBasicMaterial({
+            color, side: THREE.DoubleSide, transparent: true, opacity,
+            blending: THREE.AdditiveBlending, depthWrite: false
         });
-        const ring1 = new THREE.Mesh(ringGeometry, ringMaterial);
-        ring1.rotation.x = Math.PI / 2;
-        scene.add(ring1);
-
-        const ring2 = new THREE.Mesh(ringGeometry, ringMaterial.clone());
-        ring2.rotation.y = Math.PI / 2;
-        ring2.material.color.setHex(0x00ff88);
-        scene.add(ring2);
-
-        const ring3 = new THREE.Mesh(ringGeometry, ringMaterial.clone());
-        ring3.rotation.z = Math.PI / 2;
-        ring3.material.color.setHex(0xffd700);
-        scene.add(ring3);
-
-        const statusEl = document.getElementById('status');
-        const statuses = [
-            'Initializing systems...',
-            'Checking database connections...',
-            'Optimizing performance...',
-            'Deploying updates...',
-            'Running diagnostics...',
-            'Almost ready...'
+        const rings = [
+            new THREE.Mesh(ringGeo, ringMat(0x00d4aa, 0.08)),
+            new THREE.Mesh(ringGeo, ringMat(0x0088ff, 0.06)),
+            new THREE.Mesh(ringGeo, ringMat(0x6366f1, 0.05))
         ];
-        let statusIndex = 0;
-        setInterval(() => {
-            statusIndex = (statusIndex + 1) % statuses.length;
-            statusEl.style.opacity = 0;
-            setTimeout(() => {
-                statusEl.textContent = statuses[statusIndex];
-                statusEl.style.opacity = 1;
-            }, 300);
-        }, 2000);
+        rings[0].rotation.x = Math.PI/2;
+        rings[1].rotation.y = Math.PI/2;
+        rings[2].rotation.z = Math.PI/2;
+        rings.forEach(r => scene.add(r));
 
-        const mouse = { x: 0, y: 0 };
-        document.addEventListener('mousemove', (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
+        const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambient);
 
+        const progressFill = document.getElementById('progress-fill');
+        const progressPct = document.getElementById('progress-pct');
+        const startedEl = document.getElementById('started-time');
+        const etaEl = document.getElementById('eta-time');
+        const logEl = document.getElementById('log');
+        const toggleBtn = document.getElementById('details-toggle');
+        const panel = document.getElementById('details-panel');
+        const notifyBtn = document.getElementById('notify-btn');
+
+        const startTime = Date.now();
+        startedEl.textContent = new Date(startTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        const etaMs = startTime + 15*60*1000;
+        etaEl.textContent = new Date(etaMs).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+        const logs = [
+            {t:0, lvl:'info', msg:'Initializing maintenance window'},
+            {t:1200, lvl:'info', msg:'Draining active connections...'},
+            {t:2800, lvl:'info', msg:'Connection pool drained (0/247)'},
+            {t:4100, lvl:'info', msg:'Starting database migration v2.4.0'},
+            {t:6800, lvl:'info', msg:'Migration 1/12: add_index_activation_keys'},
+            {t:8200, lvl:'info', msg:'Migration 2/12: alter_email_verification'},
+            {t:9500, lvl:'info', msg:'Migration 3/12: create_audit_table'},
+            {t:11200, lvl:'info', msg:'Migration 4/12: optimize_queries'},
+            {t:13000, lvl:'warn', msg:'Slow query detected on activations table'},
+            {t:13200, lvl:'info', msg:'Applied partial index optimization'},
+            {t:14800, lvl:'info', msg:'Migration 5/12: update_brand_config'},
+            {t:16100, lvl:'info', msg:'Migration 6/12: add_rate_limiting'},
+            {t:17500, lvl:'info', msg:'Migration 7/12: refresh_materialized_views'},
+            {t:19000, lvl:'info', msg:'Migration 8/12: update_ssl_certs'},
+            {t:20500, lvl:'info', msg:'Migration 9/12: cleanup_expired_tokens'},
+            {t:22000, lvl:'info', msg:'Migration 10/12: rebuild_search_index'},
+            {t:23800, lvl:'info', msg:'Migration 11/12: validate_foreign_keys'},
+            {t:25200, lvl:'info', msg:'Migration 12/12: update_schema_version'},
+            {t:27000, lvl:'info', msg:'All migrations applied successfully'},
+            {t:28500, lvl:'info', msg:'Running health checks...'},
+            {t:29800, lvl:'info', msg:'API: OK | DB: OK | Cache: OK | Queue: OK'},
+            {t:31000, lvl:'info', msg:'Warming cache layers...'},
+            {t:32500, lvl:'info', msg:'Rolling out to edge nodes...'},
+            {t:34200, lvl:'info', msg:'Verifying deployment integrity'},
+            {t:35800, lvl:'info', msg:'Maintenance window completing'},
+            {t:37000, lvl:'info', msg:'Restoring traffic...'}
+        ];
+
+        function renderLogs(elapsed) {
+            logEl.innerHTML = '';
+            logs.filter(l => l.t <= elapsed).forEach((l, i) => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.style.animationDelay = (i * 30) + 'ms';
+                const time = new Date(startTime + l.t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+                entry.innerHTML = `<span class="log-time">[${time}]</span><span class="log-level ${l.lvl}">${l.lvl.toUpperCase()}</span><span class="log-msg">${l.msg}</span>`;
+                logEl.appendChild(entry);
+            });
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        let progress = 0;
+        let direction = 1;
         function animate() {
             requestAnimationFrame(animate);
-            const time = Date.now() * 0.001;
-            const pos = geometry.attributes.position.array;
-            for (let i = 0; i < particlesCount; i++) {
-                pos[i * 3] += velocities[i].x * Math.sin(time + i);
-                pos[i * 3 + 1] += velocities[i].y * Math.cos(time + i);
-                pos[i * 3 + 2] += velocities[i].z * Math.sin(time * 0.5 + i);
-                const dist = Math.sqrt(pos[i * 3] ** 2 + pos[i * 3 + 1] ** 2 + pos[i * 3 + 2] ** 2);
-                if (dist > 40) {
-                    const scale = 35 / dist;
-                    pos[i * 3] *= scale;
-                    pos[i * 3 + 1] *= scale;
-                    pos[i * 3 + 2] *= scale;
-                }
+            const t = Date.now() * 0.001;
+            const elapsed = Date.now() - startTime;
+
+            const pos = geo.attributes.position.array;
+            for (let i = 0; i < COUNT; i++) {
+                pos[i*3] += velocities[i].vx * Math.sin(t + i*0.01);
+                pos[i*3+1] += velocities[i].vy * Math.cos(t + i*0.01);
+                pos[i*3+2] += velocities[i].vz * Math.sin(t*0.5 + i*0.01);
+                const d = Math.hypot(pos[i*3], pos[i*3+1], pos[i*3+2]);
+                if (d > 40) { const s = 35/d; pos[i*3]*=s; pos[i*3+1]*=s; pos[i*3+2]*=s; }
             }
-            geometry.attributes.position.needsUpdate = true;
-            particles.rotation.x += 0.0001;
-            particles.rotation.y += 0.0002;
-            ring1.rotation.z += 0.0005;
-            ring2.rotation.x += 0.0003;
-            ring3.rotation.y += 0.0004;
-            ring1.material.opacity = 0.1 + Math.sin(time) * 0.05;
-            ring2.material.opacity = 0.1 + Math.cos(time) * 0.05;
-            ring3.material.opacity = 0.1 + Math.sin(time * 1.5) * 0.05;
-            camera.position.x += (mouse.x * 5 - camera.position.x) * 0.02;
-            camera.position.y += (mouse.y * 5 - camera.position.y) * 0.02;
-            camera.lookAt(0, 0, 0);
+            geo.attributes.position.needsUpdate = true;
+
+            points.rotation.x += 0.00006;
+            points.rotation.y += 0.0001;
+            rings[0].rotation.z += 0.0003;
+            rings[1].rotation.x += 0.0002;
+            rings[2].rotation.y += 0.00025;
+            rings[0].material.opacity = 0.06 + Math.sin(t)*0.02;
+            rings[1].material.opacity = 0.05 + Math.cos(t)*0.015;
+            rings[2].material.opacity = 0.04 + Math.sin(t*1.3)*0.01;
+
+            progress += direction * 0.0008;
+            if (progress >= 1) { progress = 1; direction = -1; }
+            if (progress <= 0) { progress = 0; direction = 1; }
+            const pct = Math.round(progress * 100);
+            progressFill.style.width = pct + '%';
+            progressFill.parentElement.setAttribute('aria-valuenow', pct);
+            progressPct.textContent = pct + '%';
+
+            if (elapsed < logs[logs.length-1].t) {
+                renderLogs(elapsed);
+            }
+
             controls.update();
             renderer.render(scene, camera);
         }
 
         animate();
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        toggleBtn.addEventListener('click', () => {
+            const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+            toggleBtn.setAttribute('aria-expanded', !expanded);
+            panel.classList.toggle('open');
         });
 
-        for (let i = 0; i < 20; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDelay = Math.random() * 6 + 's';
-            p.style.animationDuration = 4 + Math.random() * 4 + 's';
-            p.style.background = ['#00b4ff', '#00ff88', '#ffd700'][Math.floor(Math.random() * 3)];
-            document.getElementById('particles').appendChild(p);
-        }
+        notifyBtn.addEventListener('click', () => {
+            notifyBtn.textContent = 'Subscribed';
+            notifyBtn.disabled = true;
+            notifyBtn.style.opacity = '0.6';
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = innerWidth / innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(innerWidth, innerHeight);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                alert('Command palette: Deploy, Logs, Metrics, Settings');
+            }
+        });
     </script>
 </body>
 </html>
